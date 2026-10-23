@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Administration · Commandes IFT</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="loading">
+  <header class="topbar"></header>
+
+  <main>
+    <h1>Administration</h1>
+
+    <div class="tabs" role="tablist">
+      <button class="tab active" data-tab="products" role="tab">Catalogue</button>
+      <button class="tab" data-tab="users" role="tab">Utilisateurs</button>
+    </div>
+
+    <!-- ================= Onglet Catalogue ================= -->
+    <section data-panel="products" class="stack">
+      <form class="card form" id="product-form">
+        <h2 id="form-title">Ajouter un article</h2>
+        <label>
+          Nom
+          <input type="text" name="name" maxlength="100" required>
+        </label>
+        <label>
+          Catégorie
+          <!-- datalist : propose les catégories existantes tout en permettant d'en créer une -->
+          <input type="text" name="category" maxlength="50" list="categories" required>
+          <datalist id="categories"></datalist>
+        </label>
+        <label>
+          Prix indicatif (€)
+          <input type="number" name="price" min="0" step="0.01" required>
+        </label>
+        <label>
+          Lien fournisseur (facultatif)
+          <input type="url" name="supplierUrl" maxlength="500" placeholder="https://...">
+        </label>
+        <label>
+          Description
+          <textarea name="description" rows="3" maxlength="1000"></textarea>
+        </label>
+        <label class="checkbox">
+          <input type="checkbox" name="available" checked> Disponible à la commande
+        </label>
+        <div class="actions">
+          <button type="button" class="btn btn-secondary" id="cancel-edit" hidden>Annuler la modification</button>
+          <button type="submit" class="btn">Enregistrer</button>
+        </div>
+      </form>
+
+      <div class="card">
+        <div class="toolbar">
+          <input type="search" id="product-search" class="search" placeholder="Rechercher un article...">
+          <button class="btn btn-secondary" id="seed-btn">Insérer les produits de démo</button>
+        </div>
+        <div class="table-wrapper">
+          <table>
+            <thead>
+              <tr><th>Nom</th><th>Catégorie</th><th class="num">Prix</th><th>Disponible</th><th>Actions</th></tr>
+            </thead>
+            <tbody id="products">
+              <tr><td colspan="5" class="empty">Chargement...</td></tr>
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </section>
+
+    <!-- ================= Onglet Utilisateurs ================= -->
+    <section data-panel="users" class="card" hidden>
+      <div class="toolbar">
+        <input type="search" id="user-search" class="search" placeholder="Rechercher un utilisateur...">
+      </div>
+      <p class="hint">
+        Le changement de rôle est immédiat. Vous ne pouvez pas modifier votre propre rôle
+        (les règles de sécurité l'interdisent, ce qui évite de perdre le dernier admin par erreur).
+      </p>
+      <div class="table-wrapper">
+        <table>
+          <thead>
+            <tr><th>Nom</th><th>E-mail</th><th>Rôle</th><th>Inscrit le</th></tr>
+          </thead>
+          <tbody id="users">
+            <tr><td colspan="4" class="empty">Chargement...</td></tr>
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </main>
+
+  <footer class="footer"></footer>
+
+  <script type="module" src="js/pages/admin.js"></script>
+</body>
+</html>
