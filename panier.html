@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Nouvelle commande · Commandes IFT</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="loading">
+  <header class="topbar"></header>
+
+  <main class="stack">
+    <h1>Nouvelle commande</h1>
+
+    <!-- Consignes, comme l'encadré rouge du site officiel -->
+    <div class="rules-box">
+      <p>Pour que votre commande soit acceptée</p>
+      <ul>
+        <li>Donnez un titre clair à votre commande.</li>
+        <li>Expliquez à quel projet servent les articles et pourquoi ils sont nécessaires.</li>
+        <li>Regroupez vos besoins dans une seule commande plutôt que plusieurs petites.</li>
+        <li>Les prix sont indicatifs : le staff vérifie le prix réel avant de commander.</li>
+      </ul>
+    </div>
+
+    <!-- Contenu du panier -->
+    <section class="card">
+      <h2>Articles</h2>
+      <div id="cart">
+        <p class="empty">Chargement...</p>
+      </div>
+    </section>
+
+    <!-- Formulaire de validation -->
+    <form class="card form" id="order-form">
+      <h2>Informations de la commande</h2>
+      <label>
+        Titre
+        <input type="text" name="title" maxlength="120" required
+               placeholder="Ex. : Capteurs pour le robot suiveur de ligne">
+      </label>
+      <label>
+        Projet / justification
+        <textarea name="justification" rows="5" maxlength="2000" required
+                  placeholder="Nom du projet, à quoi serviront les articles, échéance..."></textarea>
+      </label>
+      <div class="actions">
+        <a href="catalogue.html" class="btn btn-secondary">Continuer mes achats</a>
+        <button type="submit" class="btn" id="submit-btn">Valider la commande</button>
+      </div>
+    </form>
+  </main>
+
+  <footer class="footer"></footer>
+
+  <script type="module" src="js/pages/panier.js"></script>
+</body>
+</html>

@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Mes commandes · Commandes IFT</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="loading">
+  <header class="topbar"></header>
+
+  <main>
+    <h1>Mes commandes</h1>
+
+    <div class="toolbar">
+      <a href="catalogue.html" class="btn">Nouvelle commande</a>
+      <input type="search" id="search" class="search" placeholder="Rechercher une commande...">
+      <select id="status-filter">
+        <option value="">Tous les statuts</option>
+      </select>
+    </div>
+
+    <div class="table-wrapper">
+      <table>
+        <thead>
+          <tr>
+            <th>Statut</th>
+            <th>Titre</th>
+            <th class="num">Articles</th>
+            <th class="num">Total indicatif</th>
+            <th>Dernière mise à jour</th>
+            <th>Création</th>
+          </tr>
+        </thead>
+        <tbody id="orders">
+          <tr><td colspan="6" class="empty">Chargement...</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </main>
+
+  <footer class="footer"></footer>
+
+  <script type="module" src="js/pages/commandes.js"></script>
+</body>
+</html>

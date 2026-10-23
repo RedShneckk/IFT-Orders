@@ -17,7 +17,7 @@ export function getCart() {
   }
 }
 
-function saveCart(cart) {
+export function saveCart(cart) {
   try {
     localStorage.setItem(STORAGE_KEY, JSON.stringify(cart));
   } catch {

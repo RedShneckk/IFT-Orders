@@ -384,6 +384,7 @@ td input[type="number"] { width: 80px; }
   justify-content: space-between;
   gap: 12px;
 }
+.order-header h1 { margin: 0; text-align: left; overflow-wrap: anywhere; }
 .meta { display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; margin: 0; }
 .meta dt { font-weight: 600; color: var(--muted); }
 .meta dd { margin: 0; overflow-wrap: anywhere; }
