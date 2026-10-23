@@ -12,10 +12,11 @@
 // =============================================================================
 
 export const firebaseConfig = {
-  apiKey: "A_REMPLACER",
-  authDomain: "A_REMPLACER.firebaseapp.com",
-  projectId: "A_REMPLACER",
-  storageBucket: "A_REMPLACER.appspot.com",
-  messagingSenderId: "A_REMPLACER",
-  appId: "A_REMPLACER",
+  apiKey: "AIzaSyBGJtXcuHhfdQ8XrWzm8yDIFPt7LOYS3Mc",
+  authDomain: "ift-orders.firebaseapp.com",
+  projectId: "ift-orders",
+  storageBucket: "ift-orders.firebasestorage.app",
+  messagingSenderId: "941718095266",
+  appId: "1:941718095266:web:aaffa984c8e4f09723defb",
+  measurementId: "G-XQXET6RZNE", // Google Analytics : non utilisé par le site
 };
