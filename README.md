@@ -1,5 +1,7 @@
 # Commandes IFT : version étudiante
 
+🔗 **Site en ligne : <https://redshneckk.github.io/IFT-Orders/>**
+
 Ce site permet de commander du matériel pour des projets. C'est une version simplifiée du site de commande de
 l'IFT (Institute of Future Technology, ESILV), réalisée comme exercice du cours de technologies web.
 
