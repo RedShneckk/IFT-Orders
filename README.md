@@ -203,15 +203,19 @@ le dernier admin par erreur. Pour retirer un admin, un autre admin doit s'en cha
 4. Au bout d'une à deux minutes, le site est en ligne à l'adresse
    `https://<mon-pseudo>.github.io/commandes-ift/`.
 
-### Autoriser le domaine GitHub Pages dans Firebase Auth (indispensable)
-Firebase Auth refuse les connexions qui viennent d'un domaine inconnu.
+### Autoriser le domaine GitHub Pages dans Firebase Auth (recommandé)
+Firebase Auth tient une liste de **domaines autorisés**. Elle sert à deux choses :
+- la connexion par un fournisseur externe (Google, GitHub…), en pop-up ou par redirection ;
+- les liens envoyés par e-mail qui renvoient vers le site (paramètre `continueUrl`).
+
+La connexion par **e-mail et mot de passe** n'est pas concernée : le site fonctionne même sans cette étape.
+Ajouter le domaine reste une bonne pratique, et devient obligatoire dès qu'on ajoute par exemple
+« Se connecter avec Google ». Sinon, on obtient l'erreur `auth/unauthorized-domain`.
 
 1. Dans la console Firebase, aller dans **Authentication** > onglet **Settings** (Paramètres) >
    **Domaines autorisés**.
 2. Cliquer sur **Ajouter un domaine** et saisir **`<mon-pseudo>.github.io`**. Il faut seulement le domaine,
    sans `https://` ni le nom du dépôt.
-
-Sans cette étape, la connexion échoue sur le site en ligne avec l'erreur `auth/unauthorized-domain`.
 
 ---
 
