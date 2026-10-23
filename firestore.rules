@@ -1,0 +1,219 @@
+// =============================================================================
+// Règles de sécurité Cloud Firestore : le vrai « back-end » du site
+// -----------------------------------------------------------------------------
+// Le site est 100 % statique : n'importe qui peut lire et modifier le
+// JavaScript dans son navigateur, ou appeler Firestore directement depuis la
+// console. Ces règles sont exécutées par les serveurs Google à CHAQUE lecture
+// et écriture : c'est elles, et elles seules, qui protègent les données.
+//
+// Tout ce qui n'est pas explicitement autorisé ici est refusé.
+// À publier dans : Console Firebase > Firestore Database > Règles.
+// =============================================================================
+
+rules_version = '2';
+
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    // =========================================================================
+    // Fonctions utilitaires
+    // =========================================================================
+
+    function signedIn() {
+      return request.auth != null;
+    }
+
+    function isSelf(uid) {
+      return signedIn() && request.auth.uid == uid;
+    }
+
+    // Rôle de l'utilisateur connecté, lu dans son document users/{uid}.
+    // (Chaque get() compte comme une lecture dans le quota Firestore.)
+    function myRole() {
+      return get(/databases/$(database)/documents/users/$(request.auth.uid)).data.role;
+    }
+
+    function isAdmin() {
+      return signedIn() && myRole() == 'admin';
+    }
+
+    // « staff » au sens large : staff OU admin (l'admin peut tout ce que fait le staff)
+    function isStaff() {
+      return signedIn() && myRole() in ['staff', 'admin'];
+    }
+
+    function isNonEmptyString(value, maxLength) {
+      return value is string && value.size() > 0 && value.size() <= maxLength;
+    }
+
+    // =========================================================================
+    // USERS : profils et rôles
+    // =========================================================================
+    match /users/{uid} {
+
+      // Chacun lit son profil ; le staff et les admins lisent tous les profils.
+      allow read: if isSelf(uid) || isStaff();
+
+      // Création de SON profil uniquement, et OBLIGATOIREMENT avec le rôle student.
+      allow create: if isSelf(uid) && validNewUser();
+
+      // Mise à jour :
+      //  - par soi-même : uniquement le nom affiché, donc jamais son rôle ;
+      //  - par un admin : uniquement le rôle, et jamais sur son propre document.
+      allow update: if (isSelf(uid) && validSelfUpdate())
+                    || (isAdmin() && !isSelf(uid) && validRoleUpdate());
+
+      allow delete: if false;
+    }
+
+    function validNewUser() {
+      let newUser = request.resource.data;
+      let fields = ['email', 'displayName', 'role', 'createdAt'];
+      return newUser.keys().hasOnly(fields)
+          && newUser.keys().hasAll(fields)
+          && newUser.role == 'student'
+          && newUser.email == request.auth.token.email
+          && isNonEmptyString(newUser.displayName, 60)
+          && newUser.createdAt == request.time;
+    }
+
+    function validSelfUpdate() {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['displayName'])
+          && isNonEmptyString(request.resource.data.displayName, 60);
+    }
+
+    function validRoleUpdate() {
+      return request.resource.data.diff(resource.data).affectedKeys().hasOnly(['role'])
+          && request.resource.data.role in ['student', 'staff', 'admin'];
+    }
+
+    // =========================================================================
+    // PRODUCTS : le catalogue
+    // =========================================================================
+    match /products/{productId} {
+
+      // Tout utilisateur connecté peut consulter le catalogue.
+      allow read: if signedIn();
+
+      // Seul un admin modifie le catalogue, avec des données valides.
+      allow create: if isAdmin()
+                    && validProduct(request.resource.data)
+                    && request.resource.data.createdAt == request.time
+                    && request.resource.data.updatedAt == request.time;
+
+      allow update: if isAdmin()
+                    && validProduct(request.resource.data)
+                    && request.resource.data.createdAt == resource.data.createdAt
+                    && request.resource.data.updatedAt == request.time;
+
+      allow delete: if isAdmin();
+    }
+
+    function validProduct(p) {
+      let fields = ['name', 'description', 'category', 'price',
+                    'supplierUrl', 'available', 'createdAt', 'updatedAt'];
+      return p.keys().hasOnly(fields)
+          && p.keys().hasAll(fields)
+          && isNonEmptyString(p.name, 100)
+          && p.description is string && p.description.size() <= 1000
+          && isNonEmptyString(p.category, 50)
+          && p.price is number && p.price >= 0 && p.price <= 100000
+          && p.supplierUrl is string && p.supplierUrl.size() <= 500
+          && (p.supplierUrl == '' || p.supplierUrl.matches('https?://.+'))
+          && p.available is bool;
+    }
+
+    // =========================================================================
+    // ORDERS : les commandes
+    // =========================================================================
+    match /orders/{orderId} {
+
+      // L'auteur lit ses commandes ; staff et admin lisent toutes les commandes.
+      // Pour un étudiant, une requête de liste DOIT filtrer sur userId == son uid,
+      // sinon Firestore la refuse entièrement.
+      allow read: if signedIn()
+                  && (resource.data.userId == request.auth.uid || isStaff());
+
+      // Création : pour soi-même, en statut pending uniquement.
+      allow create: if signedIn() && validNewOrder(request.resource.data);
+
+      // Mise à jour : uniquement un changement de statut autorisé (voir plus bas).
+      allow update: if signedIn() && validStatusChange();
+
+      // On ne supprime jamais une commande : on l'annule ou on la refuse (traçabilité).
+      allow delete: if false;
+    }
+
+    function validNewOrder(order) {
+      let fields = ['userId', 'userEmail', 'userName', 'title', 'justification',
+                    'items', 'total', 'status', 'history', 'createdAt', 'updatedAt'];
+      return order.keys().hasOnly(fields)
+          && order.keys().hasAll(fields)
+          && order.userId == request.auth.uid
+          && order.userEmail == request.auth.token.email
+          && order.userName is string && order.userName.size() <= 60
+          && isNonEmptyString(order.title, 120)
+          && isNonEmptyString(order.justification, 2000)
+          && order.items is list && order.items.size() > 0 && order.items.size() <= 50
+          && order.total is number && order.total >= 0
+          && order.status == 'pending'
+          && order.history is list && order.history.size() == 1
+          && validHistoryEntry(order.history[0], 'pending')
+          && order.createdAt == request.time
+          && order.updatedAt == request.time;
+    }
+
+    // Une entrée d'historique : { status, by, byEmail, comment, at }
+    // signée par l'utilisateur qui fait l'action, et datée de « maintenant ».
+    // (La date vient de l'ordinateur du client, car serverTimestamp() est
+    // interdit dans un tableau : on tolère 10 minutes d'écart d'horloge.)
+    function validHistoryEntry(entry, status) {
+      let fields = ['status', 'by', 'byEmail', 'comment', 'at'];
+      return entry is map
+          && entry.keys().hasOnly(fields)
+          && entry.keys().hasAll(fields)
+          && entry.status == status
+          && entry.by == request.auth.uid
+          && entry.byEmail == request.auth.token.email
+          && entry.comment is string && entry.comment.size() <= 500
+          && entry.at is timestamp
+          && entry.at > request.time - duration.value(10, 'm')
+          && entry.at < request.time + duration.value(10, 'm');
+    }
+
+    // Changement de statut d'une commande existante.
+    function validStatusChange() {
+      let before = resource.data;
+      let after = request.resource.data;
+      let oldSize = before.history.size();
+      let entry = after.history[after.history.size() - 1];
+      // seuls status, history et updatedAt peuvent changer (items, justification... sont figés)
+      return after.diff(before).affectedKeys().hasOnly(['status', 'history', 'updatedAt'])
+          && after.updatedAt == request.time
+          // l'historique est l'ancien historique, inchangé, + exactement une entrée
+          && after.history.size() == oldSize + 1
+          && after.history[0:oldSize] == before.history
+          && validHistoryEntry(entry, after.status)
+          // un refus doit toujours être motivé
+          && (after.status != 'rejected' || entry.comment.size() > 0)
+          // et la transition doit être permise pour ce rôle
+          && (ownerCancels(before, after) || staffMoves(before.status, after.status));
+    }
+
+    // L'auteur peut annuler sa commande tant qu'elle est en attente.
+    function ownerCancels(before, after) {
+      return before.userId == request.auth.uid
+          && before.status == 'pending'
+          && after.status == 'cancelled';
+    }
+
+    // Staff et admin font avancer la commande dans son cycle de vie.
+    function staffMoves(from, to) {
+      return isStaff() && (
+           (from == 'pending'  && to in ['accepted', 'rejected'])
+        || (from == 'accepted' && to == 'ordered')
+        || (from == 'ordered'  && to == 'delivered')
+      );
+    }
+  }
+}

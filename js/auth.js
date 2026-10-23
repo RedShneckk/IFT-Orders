@@ -35,7 +35,8 @@ export async function getOrCreateProfile(user, displayName = "") {
 
   const profile = {
     email: user.email,
-    displayName: displayName || user.displayName || user.email.split("@")[0],
+    // 60 caractères max : même limite que dans firestore.rules
+    displayName: (displayName || user.displayName || user.email.split("@")[0]).slice(0, 60),
     role: "student",
     createdAt: serverTimestamp(),
   };
