@@ -1,0 +1,38 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Catalogue · Commandes IFT</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="loading">
+  <header class="topbar"></header>
+
+  <main>
+    <h1>Catalogue</h1>
+
+    <!-- Recherche et filtres -->
+    <div class="toolbar">
+      <input type="search" id="search" class="search" placeholder="Rechercher un article...">
+      <select id="category-filter">
+        <option value="">Toutes les catégories</option>
+      </select>
+      <label class="checkbox btn btn-secondary">
+        <input type="checkbox" id="only-available"> Disponibles uniquement
+      </label>
+      <a href="panier.html" class="btn" id="go-cart" hidden>Voir le panier</a>
+    </div>
+
+    <div id="products" class="grid">
+      <p class="empty">Chargement du catalogue...</p>
+    </div>
+  </main>
+
+  <footer class="footer"></footer>
+
+  <script type="module" src="js/pages/catalogue.js"></script>
+</body>
+</html>

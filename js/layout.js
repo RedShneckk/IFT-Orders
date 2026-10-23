@@ -7,6 +7,7 @@
 // =============================================================================
 
 import { escapeHtml, ROLE_LABELS } from "./utils.js";
+import { cartCount } from "./cart.js";
 
 // Liens du menu, et rôles qui peuvent les voir
 const NAV_LINKS = [
@@ -56,7 +57,18 @@ export function renderLayout(profile) {
     logout();
   });
 
+  // Compteur d'articles à côté du lien « Panier » (étudiants uniquement)
+  updateCartLink();
+  window.addEventListener("cart-changed", updateCartLink);
+
   renderFooter();
+}
+
+function updateCartLink() {
+  const link = document.querySelector("#nav-cart");
+  if (!link) return;
+  const count = cartCount();
+  link.innerHTML = `Panier${count ? ` <span class="cart-count">${count}</span>` : ""}`;
 }
 
 export function renderFooter() {
