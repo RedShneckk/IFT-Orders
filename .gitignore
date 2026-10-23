@@ -1,0 +1,8 @@
+# Captures du site officiel (références personnelles, contiennent un e-mail)
+screen site officiel/
+
+# Fichiers système / éditeur
+.DS_Store
+Thumbs.db
+.vscode/
+node_modules/

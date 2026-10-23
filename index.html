@@ -1,0 +1,76 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Connexion · Commandes IFT</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Ubuntu:wght@400;500;700&display=swap">
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body class="loading">
+  <main>
+    <div class="auth-wrapper">
+      <div class="logo"><span class="logo-mark">V</span>IFT</div>
+      <p class="subtitle">Commandes de matériel pour les projets étudiants</p>
+
+      <div class="card">
+        <!-- Onglets : Connexion / Inscription -->
+        <div class="tabs" role="tablist">
+          <button class="tab active" data-tab="login" role="tab">Connexion</button>
+          <button class="tab" data-tab="signup" role="tab">Inscription</button>
+        </div>
+
+        <p class="alert" id="message" hidden></p>
+
+        <!-- Formulaire de connexion -->
+        <form class="form" id="login-form" data-panel="login">
+          <label>
+            E-mail
+            <input type="email" name="email" autocomplete="email" required>
+          </label>
+          <label>
+            Mot de passe
+            <input type="password" name="password" autocomplete="current-password" required>
+          </label>
+          <button type="submit" class="btn">Se connecter</button>
+          <button type="button" class="link-button" data-tab="reset">Mot de passe oublié ?</button>
+        </form>
+
+        <!-- Formulaire d'inscription -->
+        <form class="form" id="signup-form" data-panel="signup" hidden>
+          <label>
+            Nom affiché
+            <input type="text" name="displayName" maxlength="60" autocomplete="name" required>
+          </label>
+          <label>
+            E-mail
+            <input type="email" name="email" autocomplete="email" required>
+          </label>
+          <label>
+            Mot de passe
+            <input type="password" name="password" minlength="6" autocomplete="new-password" required>
+            <span class="hint">6 caractères minimum.</span>
+          </label>
+          <button type="submit" class="btn">Créer mon compte</button>
+        </form>
+
+        <!-- Formulaire « mot de passe oublié » -->
+        <form class="form" id="reset-form" data-panel="reset" hidden>
+          <p class="hint">Saisissez votre e-mail : vous recevrez un lien pour choisir un nouveau mot de passe.</p>
+          <label>
+            E-mail
+            <input type="email" name="email" autocomplete="email" required>
+          </label>
+          <button type="submit" class="btn">Envoyer le lien</button>
+          <button type="button" class="link-button" data-tab="login">Retour à la connexion</button>
+        </form>
+      </div>
+    </div>
+  </main>
+
+  <footer class="footer"></footer>
+
+  <script type="module" src="js/pages/login.js"></script>
+</body>
+</html>

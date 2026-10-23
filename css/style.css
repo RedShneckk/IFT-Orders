@@ -1,0 +1,445 @@
+/* =============================================================================
+   Feuille de style unique du site
+   Inspirée du site de commande IFT : fond gris clair, couleur sarcelle (teal),
+   en-tête avec menu burger. Approche « mobile first » : les styles de base
+   visent le téléphone, les @media (min-width) ajoutent la version ordinateur.
+   ========================================================================== */
+
+/* ---------- Variables (couleurs, rayons, ombres) ---------- */
+:root {
+  --teal: #00807a;
+  --teal-dark: #00665f;
+  --teal-light: #e0f2f1;
+  --bg: #e1e1e1;
+  --surface: #f4f4f4;
+  --surface-alt: #d3d3d3;
+  --text: #1f2937;
+  --muted: #5b6472;
+  --border: #c4c4c4;
+  --danger: #c62828;
+  --danger-bg: #fbe9e9;
+  --success: #2e7d32;
+  --radius: 8px;
+  --shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
+  font-family: "Ubuntu", "Segoe UI", system-ui, -apple-system, sans-serif;
+  color: var(--text);
+}
+
+* { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  background: var(--bg);
+  line-height: 1.5;
+}
+
+/* Tant que l'utilisateur n'est pas vérifié, on masque le contenu
+   (évite d'apercevoir une page à laquelle on n'a pas droit). */
+body.loading main { visibility: hidden; }
+
+main {
+  flex: 1;
+  width: 100%;
+  max-width: 1300px;
+  margin: 0 auto;
+  padding: 24px 16px;
+}
+
+h1 { color: var(--teal); text-align: center; font-size: 1.6rem; margin: 0 0 24px; }
+h2 { color: var(--teal); font-size: 1.2rem; margin: 0 0 12px; }
+a { color: var(--teal); }
+[hidden] { display: none !important; }
+
+/* ---------- En-tête ---------- */
+.topbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px;
+  min-height: 60px;
+  padding: 8px 16px;
+  background: var(--surface-alt);
+  box-shadow: var(--shadow);
+}
+
+.burger {
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 8px;
+  background: none;
+  border: 0;
+  cursor: pointer;
+}
+.burger span { width: 22px; height: 2px; background: var(--teal); }
+
+.logo {
+  position: relative;
+  font-weight: 800;
+  font-size: 1.5rem;
+  color: #000;
+  text-decoration: none;
+  padding-top: 8px;
+}
+.logo-mark {
+  position: absolute;
+  top: -4px;
+  left: 4px;
+  font-size: 0.8rem;
+  color: var(--teal);
+}
+
+/* Sur mobile, le menu est replié et s'ouvre avec le burger */
+.nav {
+  display: none;
+  order: 10;            /* passe sous la ligne logo/utilisateur */
+  width: 100%;
+  flex-direction: column;
+}
+.topbar.nav-open .nav { display: flex; }
+.nav a {
+  padding: 10px 12px;
+  border-radius: var(--radius);
+  color: var(--text);
+  text-decoration: none;
+  font-weight: 500;
+}
+.nav a:hover { background: var(--surface); }
+.nav a.active { color: var(--teal); font-weight: 700; }
+
+.user-box {
+  margin-left: auto;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+}
+.user-email {
+  display: none;
+  font-size: 0.9rem;
+}
+
+.cart-count {
+  display: inline-block;
+  min-width: 20px;
+  margin-left: 4px;
+  padding: 0 6px;
+  border-radius: 10px;
+  background: var(--teal);
+  color: #fff;
+  font-size: 0.75rem;
+  text-align: center;
+}
+
+/* ---------- Pied de page ---------- */
+.footer {
+  padding: 16px;
+  background: var(--surface-alt);
+  font-size: 0.9rem;
+}
+
+/* ---------- Boutons ---------- */
+.btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  gap: 6px;
+  padding: 9px 16px;
+  border: 0;
+  border-radius: var(--radius);
+  background: var(--teal);
+  color: #fff;
+  font: inherit;
+  font-weight: 600;
+  text-decoration: none;
+  cursor: pointer;
+  white-space: nowrap;
+}
+.btn:hover { background: var(--teal-dark); }
+.btn:disabled { opacity: 0.5; cursor: not-allowed; }
+.btn-secondary { background: var(--surface); color: var(--text); border: 1px solid var(--border); }
+.btn-secondary:hover { background: var(--surface-alt); }
+.btn-danger { background: var(--danger); }
+.btn-danger:hover { background: #a01f1f; }
+.btn-small { padding: 5px 10px; font-size: 0.85rem; }
+
+/* ---------- Formulaires ---------- */
+.form { display: flex; flex-direction: column; gap: 14px; }
+.form label { display: flex; flex-direction: column; gap: 4px; font-weight: 600; }
+.form .checkbox { flex-direction: row; align-items: center; gap: 8px; }
+
+input, select, textarea {
+  width: 100%;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  font: inherit;
+  font-weight: 400;
+  color: var(--text);
+}
+input[type="checkbox"] { width: auto; }
+input:focus, select:focus, textarea:focus {
+  outline: 2px solid var(--teal);
+  outline-offset: 0;
+  border-color: var(--teal);
+}
+textarea { resize: vertical; }
+.actions { display: flex; flex-wrap: wrap; gap: 10px; justify-content: flex-end; }
+.hint { color: var(--muted); font-size: 0.85rem; font-weight: 400; }
+
+/* ---------- Cartes / panneaux ---------- */
+.card {
+  background: var(--surface);
+  border-radius: var(--radius);
+  padding: 20px;
+  box-shadow: var(--shadow);
+}
+.stack { display: flex; flex-direction: column; gap: 20px; }
+
+/* ---------- Page de connexion ---------- */
+.auth-wrapper {
+  max-width: 420px;
+  margin: 40px auto;
+}
+.auth-wrapper .logo { display: block; text-align: center; font-size: 2.4rem; margin-bottom: 8px; }
+.auth-wrapper .logo-mark { left: calc(50% - 26px); }
+.subtitle { text-align: center; color: var(--muted); margin: 0 0 24px; }
+
+.tabs { display: flex; margin-bottom: 20px; border-radius: var(--radius); overflow: hidden; }
+.tab {
+  flex: 1;
+  padding: 10px;
+  border: 0;
+  background: var(--surface-alt);
+  font: inherit;
+  cursor: pointer;
+}
+.tab.active { background: var(--teal); color: #fff; font-weight: 600; }
+
+.link-button {
+  background: none;
+  border: 0;
+  padding: 0;
+  color: var(--teal);
+  font: inherit;
+  text-decoration: underline;
+  cursor: pointer;
+}
+
+/* ---------- Messages ---------- */
+.alert { padding: 12px 16px; border-radius: var(--radius); margin: 0; }
+.alert-error { background: var(--danger-bg); color: var(--danger); border: 1px solid var(--danger); }
+.alert-success { background: #e8f5e9; color: var(--success); border: 1px solid var(--success); }
+
+/* Encadré rouge de consignes (comme sur le site officiel) */
+.rules-box {
+  border: 1px solid var(--danger);
+  border-radius: 12px;
+  padding: 12px 20px;
+  color: var(--danger);
+  background: var(--surface-alt);
+}
+.rules-box p { margin: 4px 0; font-weight: 600; text-transform: uppercase; }
+.rules-box ul { margin: 8px 0; }
+
+.toasts {
+  position: fixed;
+  right: 16px;
+  bottom: 16px;
+  left: 16px;
+  z-index: 100;
+  display: flex;
+  flex-direction: column;
+  align-items: flex-end;
+  gap: 8px;
+}
+.toast {
+  max-width: 400px;
+  padding: 12px 16px;
+  border-radius: var(--radius);
+  background: var(--text);
+  color: #fff;
+  box-shadow: var(--shadow);
+}
+.toast-success { background: var(--success); }
+.toast-error { background: var(--danger); }
+
+.empty { padding: 32px; text-align: center; color: var(--muted); }
+
+/* ---------- Badges (statuts, rôles, catégories) ---------- */
+.badge {
+  display: inline-block;
+  padding: 2px 10px;
+  border-radius: 999px;
+  font-size: 0.8rem;
+  font-weight: 600;
+  white-space: nowrap;
+}
+.badge-role     { background: var(--teal-light); color: var(--teal-dark); }
+.badge-category { background: var(--surface-alt); color: var(--text); }
+.badge-pending   { background: #fff3cd; color: #8a6100; }
+.badge-accepted  { background: #d7f0ff; color: #0b5c8c; }
+.badge-rejected  { background: var(--danger-bg); color: var(--danger); }
+.badge-ordered   { background: #ede7f6; color: #4527a0; }
+.badge-delivered { background: #e8f5e9; color: var(--success); }
+.badge-cancelled { background: #eceff1; color: #546e7a; }
+
+/* ---------- Barre d'outils (recherche + filtres) ---------- */
+.toolbar {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 12px;
+  margin-bottom: 16px;
+}
+.toolbar > * { flex: 1 1 200px; }
+.toolbar .btn { flex: 0 0 auto; }
+.toolbar .search { flex: 3 1 260px; }
+
+/* Liste déroulante de cases à cocher (filtre des statuts) */
+.multi-select { position: relative; }
+.multi-select summary {
+  list-style: none;
+  padding: 9px 12px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--surface);
+  cursor: pointer;
+}
+.multi-select summary::-webkit-details-marker { display: none; }
+.multi-select summary::after { content: " ▾"; float: right; color: var(--muted); }
+.multi-select .options {
+  position: absolute;
+  z-index: 5;
+  top: calc(100% + 4px);
+  left: 0;
+  right: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 4px;
+  padding: 10px;
+  background: var(--surface);
+  border-radius: var(--radius);
+  box-shadow: 0 6px 16px rgba(0, 0, 0, 0.15);
+}
+.multi-select .options label { display: flex; gap: 8px; align-items: center; cursor: pointer; }
+
+/* ---------- Tableaux ---------- */
+.table-wrapper {
+  overflow-x: auto;       /* sur mobile, le tableau défile dans son cadre */
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+}
+table {
+  width: 100%;
+  border-collapse: collapse;
+  background: var(--surface);
+}
+th {
+  padding: 14px 12px;
+  background: var(--surface-alt);
+  color: var(--teal);
+  text-align: left;
+  white-space: nowrap;
+}
+td {
+  padding: 10px 12px;
+  border-top: 1px solid var(--bg);
+  vertical-align: middle;
+}
+tr.clickable { cursor: pointer; }
+tr.clickable:hover td { background: var(--teal-light); }
+td.num, th.num { text-align: right; white-space: nowrap; }
+td input[type="number"] { width: 80px; }
+.cell-actions { display: flex; flex-wrap: wrap; gap: 6px; }
+
+/* ---------- Catalogue (grille de cartes) ---------- */
+.grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
+  gap: 16px;
+}
+.product {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+.product h3 { margin: 0; font-size: 1.05rem; }
+.product p { margin: 0; color: var(--muted); font-size: 0.9rem; flex: 1; }
+.product .price { font-weight: 700; font-size: 1.1rem; color: var(--teal-dark); }
+.product .add-row { display: flex; gap: 8px; }
+.product .add-row input { width: 80px; }
+.product.unavailable { opacity: 0.55; }
+
+/* ---------- Détail d'une commande ---------- */
+.order-header {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 12px;
+}
+.meta { display: grid; grid-template-columns: max-content 1fr; gap: 6px 16px; margin: 0; }
+.meta dt { font-weight: 600; color: var(--muted); }
+.meta dd { margin: 0; overflow-wrap: anywhere; }
+.justification { white-space: pre-wrap; }
+
+/* Frise de l'historique des statuts */
+.timeline { list-style: none; margin: 0; padding: 0; }
+.timeline li {
+  position: relative;
+  padding: 0 0 18px 24px;
+  border-left: 2px solid var(--border);
+  margin-left: 6px;
+}
+.timeline li:last-child { border-left-color: transparent; }
+.timeline li::before {
+  content: "";
+  position: absolute;
+  left: -7px;
+  top: 3px;
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  background: var(--teal);
+}
+.timeline .when { color: var(--muted); font-size: 0.85rem; }
+.timeline .comment {
+  margin: 6px 0 0;
+  padding: 8px 12px;
+  background: var(--bg);
+  border-radius: var(--radius);
+  white-space: pre-wrap;
+}
+
+/* ---------- Boîte de dialogue ---------- */
+.dialog {
+  width: min(480px, calc(100vw - 32px));
+  border: 0;
+  border-radius: 12px;
+  padding: 24px;
+  background: var(--surface);
+  box-shadow: 0 10px 40px rgba(0, 0, 0, 0.3);
+}
+.dialog::backdrop { background: rgba(0, 0, 0, 0.4); }
+
+/* ---------- Version ordinateur ---------- */
+@media (min-width: 900px) {
+  main { padding: 32px; }
+  .burger { display: none; }
+  .nav {
+    display: flex;
+    order: 0;
+    width: auto;
+    flex-direction: row;
+    gap: 4px;
+    margin-left: 24px;
+  }
+  .user-email { display: inline; }
+  .toasts { left: auto; }
+}
